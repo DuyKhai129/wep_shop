@@ -45,7 +45,9 @@ const categoryController = {
     try {
       const products = await Category.findOne({
         _id: req.params.id,
-      }).populate("product");
+      })
+        .populate("product")
+        .select("product");
       res.status(200).json({
         status: "success",
         response: products,
