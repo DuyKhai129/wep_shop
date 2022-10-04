@@ -1,14 +1,10 @@
-const { Category, Product } = require("../Model/Model");
+const { Product } = require("../Model/Model");
 const ProductController = {
   //ADD
   addProduct: async (req, res) => {
     try {
       const newProduct = new Product({ ...req.body });
       const saved = await newProduct.save();
-      if (req.body.category) {
-        const product = Category.findById(req.body.category);
-        await product.updateOne({ $push: { product: saved._id } });
-      }
       res.status(200).json({
         messenger: "success",
         response: saved,
@@ -20,7 +16,7 @@ const ProductController = {
   //GET ALL
   getAllProduct: async (req, res, next) => {
     try {
-      const allProducts = await Product.find().populate("category");
+      const allProducts = await Product.find();
       res.status(200).json({
         messenger: "success",
         response: allProducts,
@@ -61,20 +57,10 @@ const ProductController = {
   deleteProduct: async (req, res, next) => {
     try {
       const deleteProduct = await Product.findByIdAndDelete(req.params.id);
-      if (deleteProduct) {
-        await Category.updateMany(
-          { job: req.params.id },
-          { $pull: { job: req.params.id } }
-        );
-        res.status(200).json({
-          messenger: "success",
-          response: deleteProduct,
-        });
-      } else {
-        return res.status(403).json({
-          messenger: "error",
-        });
-      }
+      res.status(200).json({
+        messenger: "success",
+        response: deleteProduct,
+      });
     } catch (err) {
       next(err);
     }

@@ -7,7 +7,7 @@ require("dotenv").config();
 const app = express();
 
 // Import routers
-const categoryRoutes = require("./Routes/Category");
+
 const productRoutes = require("./Routes/Product");
 //CONNECT DATABASE
 mongoose.connect(process.env.MONGODB_URL, () => {
@@ -19,7 +19,6 @@ app.use(cors());
 app.use(morgan("common"));
 
 //routes
-app.use("/api/category", categoryRoutes);
 app.use("/api/product", productRoutes);
 
 app.get("/", (req, res) => {
